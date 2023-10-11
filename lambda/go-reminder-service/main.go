@@ -493,7 +493,7 @@ func getActContactDetailsForLotse(addressResponse *sheets.ValueRange, first_name
 	phone_number := ""
 	for _, row := range addressResponse.Values {
 		// Check if the row has enough columns to avoid index out of range errors
-		if len(row) >= 4 {
+		if len(row) >= 3 {
 			// Perform type assertion for strings
 			if lastName, ok := row[0].(string); ok && lastName == last_name {
 				if firstName, ok := row[1].(string); ok && firstName == first_name {
@@ -501,8 +501,10 @@ func getActContactDetailsForLotse(addressResponse *sheets.ValueRange, first_name
 					if email, ok := row[2].(string); ok {
 						email_address = email
 					}
-					if phone, ok := row[3].(string); ok {
-						phone_number = phone
+					if len(row) >= 4 {
+						if phone, ok := row[3].(string); ok {
+							phone_number = phone
+						}
 					}
 					if email_address == "" && phone_number == "" {
 						return "", "", fmt.Errorf("no contact details found for %s", lotsenName)
